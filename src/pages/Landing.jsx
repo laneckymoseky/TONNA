@@ -44,7 +44,7 @@ export default function Landing() {
         <div className="lp-bg" />
         <div className="lp-inner">
           <div className="lp-kicker">Neighbourhood tournaments</div>
-          <h1 className="lp-title">LOCAL<br /><span>FPL</span></h1>
+          <h1 className="lp-title">TONNAH<br /><span> LOCAL FPL</span></h1>
           <p className="lp-sub">Register your team, challenge rivals, book a field and build your fantasy squad.</p>
           {session
             ? <Link className="btn" to="/home">OPEN APP</Link>
