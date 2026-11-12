@@ -1,9 +1,9 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import Bg from '../components/Bg'
 
-const label = { team: 'Team', challenge: 'Captains', direct: 'Admin' }
+const label = { team: 'Team', challenge: 'Captains', direct: 'Direct' }
 
 export default function Rooms() {
   const [rooms, setRooms] = useState([])

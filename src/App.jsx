@@ -13,6 +13,9 @@ import Challenge from './pages/Challenge'
 import Rooms from './pages/Rooms'
 import Chat from './pages/Chat'
 import Admin from './pages/Admin'
+import Player from './pages/Player'
+import Team from './pages/Team'
+import Stats from './pages/Stats'
 
 function Private({ children }) {
   const { session, loading } = useAuth()
@@ -21,7 +24,7 @@ function Private({ children }) {
 }
 
 function Nav() {
-  const { session, role } = useAuth()
+  const { session, role, slot } = useAuth()
   const nav = useNavigate()
   const logout = async () => { await supabase.auth.signOut(); nav('/') }
   return (
@@ -34,8 +37,10 @@ function Nav() {
             <Link to="/home">News</Link>
             <Link to="/profile">Profile</Link>
             <Link to="/rooms">Chat</Link>
-            <Link to="/captain">{role === 'captain' ? 'My Team' : 'Be a Captain'}</Link>
-            {role === 'captain' && <Link to="/challenge">Challenge</Link>}
+            {role === 'player' && slot
+             ? <Link to={`/team/${slot.team_id}`}>My Team</Link>
+             : <Link to="/captain">{role === 'captain' ? 'My Team' : 'Be a Captain'}</Link>}
+             {role === 'captain' && <><Link to="/challenge">Challenge</Link><Link to="/stats">Stats</Link></>}
             {role === 'admin' && <Link to="/admin">Admin</Link>}
             <button className="ghost" onClick={logout}>Logout</button>
           </>
@@ -62,6 +67,9 @@ export default function App() {
         <Route path="/rooms" element={<Private><Rooms /></Private>} />
         <Route path="/chat/:roomId" element={<Private><Chat /></Private>} />
         <Route path="/admin" element={<Private><Admin /></Private>} />
+        <Route path="/player/:id" element={<Private><Player /></Private>} />
+        <Route path="/team/:teamId" element={<Private><Team /></Private>} />
+        <Route path="/stats" element={<Private><Stats /></Private>} />
       </Routes>
     </>
   )

@@ -1,20 +1,9 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
 import Bg from '../components/Bg'
-
-const ROWS = ['FWD', 'MID', 'DEF', 'GK']
-
-function Chip({ s, onRemove }) {
-  const ini = s.player_name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()
-  return (
-    <div className="chip">
-      <div className={'dot ' + s.status}>{ini}</div>
-      <small>{s.player_name}</small>
-      <button className="x" title="Remove" onClick={() => onRemove(s.id)}>×</button>
-    </div>
-  )
-}
+import Pitch from '../components/Pitch'
 
 export default function Captain() {
   const { session, refresh } = useAuth()
@@ -49,7 +38,7 @@ export default function Captain() {
     run(supabase.from('tn_roster').insert({ team_id: team.id, player_name: name.trim(), pos }), () => setName(''))
   }
   const answer = (id, ok) => run(supabase.rpc('tn_answer_claim', { p_slot: id, p_approve: ok }))
-  const remove = id => run(supabase.from('tn_roster').delete().eq('id', id))
+  const remove = id => { if (confirm('Remove this player?')) run(supabase.from('tn_roster').delete().eq('id', id)) }
 
   if (loading) return <p className="wrap muted">Loading…</p>
 
@@ -69,8 +58,11 @@ export default function Captain() {
   return (
     <div className="wrap">
       <Bg name="team" />
-      <h1 style={{ marginBottom: 4 }}>{team.name}</h1>
-      <p className="muted" style={{ marginBottom: 12 }}>ROSTER {slots.length}/13</p>
+      <div className="row">
+        <h1 style={{ marginBottom: 4 }}>{team.name}</h1>
+        <Link to="/stats" className="btn">ADD MATCH STATS</Link>
+      </div>
+      <p className="muted" style={{ marginBottom: 12 }}>ROSTER {slots.length}/13 · tap a player to open their profile</p>
       {msg && <p className="err">{msg}</p>}
 
       {slots.length < 13 && (
@@ -98,17 +90,7 @@ export default function Captain() {
         <span><i style={{ background: '#3ddc84' }} />Signed up</span>
         <span><i style={{ background: '#f5b301' }} />Not signed up yet</span>
       </div>
-      <div className="pitch">
-        {ROWS.map(r => {
-          const list = onPitch.filter(s => s.pos === r)
-          return (
-            <div className="pl-row" key={r}>
-              {list.length === 0 && <span className="empty">NO {r}</span>}
-              {list.map(s => <Chip key={s.id} s={s} onRemove={remove} />)}
-            </div>
-          )
-        })}
-      </div>
+      <Pitch slots={onPitch} onRemove={remove} />
     </div>
   )
 }
