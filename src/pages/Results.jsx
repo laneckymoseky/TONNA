@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { MATCH_SELECT, dparts } from '../lib/prices'
 import Bg from '../components/Bg'
