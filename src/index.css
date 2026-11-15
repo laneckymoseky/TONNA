@@ -215,3 +215,13 @@ input[type=checkbox]{width:auto;margin:0 8px 0 0}
 .chip{cursor:pointer}
 .chip .dot{width:56px;height:72px;border-radius:14px;background-size:cover;background-position:center;transition:transform .2s}
 .chip:hover .dot{transform:scale(1.1)}
+.sportsel{width:auto;margin:0;padding:6px 10px;border-radius:10px;font-weight:700}
+.tag{background:color-mix(in srgb,var(--red) 18%,transparent)}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th,.tbl td{padding:8px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,.1)}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl th{color:var(--grey);font-size:13px;letter-spacing:1px}
+.cpos{font-size:11px;letter-spacing:1px;opacity:.8}
+.pitch.basketball{background:repeating-linear-gradient(90deg,#b8803f 0 46px,#c28a47 46px 92px);border-color:#fff}
+.pitch.rugby{background:repeating-linear-gradient(0deg,#2b7d3b 0 55px,#256f34 55px 110px)}
+.pitch.rugby::after{display:none}

@@ -2,14 +2,19 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
+import { useSport } from '../context/SportContext'
+import { SPORTS } from '../lib/sports'
+import DynamicFields from '../components/DynamicFields'
 
 export default function Signup() {
-  const [f, setF] = useState({ name: '', username: '', email: '', pw: '' })
+  const [f, setF] = useState({ name: '', username: '', email: '', pw: '', sport: 'football', county: '', town: '' })
+  const [answers, setAnswers] = useState({})
   const [taken, setTaken] = useState(null)
   const [err, setErr] = useState('')
   const [busy, setBusy] = useState(false)
   const nav = useNavigate()
   const { refresh } = useAuth()
+  const { setSport } = useSport()
   const set = k => e => setF({ ...f, [k]: e.target.value })
 
   useEffect(() => {
@@ -31,8 +36,13 @@ export default function Signup() {
       p_id: data.user.id, p_full_name: f.name.trim(), p_username: f.username.trim().toLowerCase(),
       p_avatar_url: null, p_position1: 'MID', p_position2: null,
     })
+    if (e2) { setBusy(false); return setErr(e2.message) }
+    const { error: e3 } = await supabase.rpc('tn_set_person', {
+      p_county: f.county, p_town: f.town, p_sport: f.sport, p_answers: answers,
+    })
     setBusy(false)
-    if (e2) return setErr(e2.message)
+    if (e3) return setErr(e3.message)
+    setSport(f.sport)
     await refresh()
     nav('/join')
   }
@@ -46,6 +56,12 @@ export default function Signup() {
       {taken === false && <p className="ok">✓ Username available</p>}
       <input type="email" placeholder="Email" value={f.email} onChange={set('email')} required />
       <input type="password" placeholder="Password (min 6)" value={f.pw} onChange={set('pw')} required minLength={6} />
+      <select value={f.sport} onChange={set('sport')}>
+        {Object.entries(SPORTS).map(([id, s]) => <option key={id} value={id}>{s.icon} {s.name}</option>)}
+      </select>
+      <input placeholder="County" value={f.county} onChange={set('county')} />
+      <input placeholder="Town / area" value={f.town} onChange={set('town')} />
+      <DynamicFields scope="player" value={answers} onChange={setAnswers} />
       {err && <p className="err">{err}</p>}
       <button disabled={busy || taken} style={{ width: '100%' }}>{busy ? '…' : 'SIGN UP'}</button>
       <p className="muted" style={{ marginTop: 16 }}>Have an account? <Link to="/login" style={{ color: 'var(--red)' }}>Sign in</Link></p>

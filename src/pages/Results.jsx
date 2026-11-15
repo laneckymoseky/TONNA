@@ -1,31 +1,44 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { SPORTS } from '../lib/sports'
 import { MATCH_SELECT, dparts } from '../lib/prices'
 import Bg from '../components/Bg'
+import SportTabs from '../components/SportTabs'
 
 export default function Results() {
+  const [tab, setTab] = useState('all')
   const [list, setList] = useState([])
   useEffect(() => {
     supabase.from('tn_challenges').select(MATCH_SELECT).eq('status', 'played')
       .order('match_date', { ascending: false }).then(({ data }) => setList(data || []))
   }, [])
+  const ids = tab === 'all' ? Object.keys(SPORTS) : [tab]
   return (
     <div className="wrap">
       <Bg name="results" />
       <h1>Results</h1>
-      {list.length === 0 && <p className="muted">No results yet.</p>}
-      {list.map(c => {
-        const [day, mon] = dparts(c.match_date)
+      <SportTabs all value={tab} onChange={setTab} />
+      {ids.map(id => {
+        const items = list.filter(c => c.sport === id)
         return (
-          <div key={c.id}>
-            <div className="card match mag">
-              <div className="date"><b>{day}</b>{mon}</div>
-              <span className="t">{c.home?.name}</span>
-              <div className="sc"><span>{c.home_score}</span><span>{c.away_score}</span></div>
-              <span className="t r">{c.away?.name}</span>
-            </div>
-            <p className="match-meta">{c.field?.name}</p>
-          </div>
+          <section key={id}>
+            <h2 style={{ margin: '18px 0 10px' }}>{SPORTS[id].icon} {SPORTS[id].name}</h2>
+            {items.length === 0 && <p className="muted">No results yet.</p>}
+            {items.map(c => {
+              const [day, mon] = dparts(c.match_date)
+              return (
+                <div key={c.id}>
+                  <div className="card match mag">
+                    <div className="date"><b>{day}</b>{mon}</div>
+                    <span className="t">{c.home?.name}</span>
+                    <div className="sc"><span>{c.home_score}</span><span>{c.away_score}</span></div>
+                    <span className="t r">{c.away?.name}</span>
+                  </div>
+                  <p className="match-meta">{c.field?.name}</p>
+                </div>
+              )
+            })}
+          </section>
         )
       })}
     </div>

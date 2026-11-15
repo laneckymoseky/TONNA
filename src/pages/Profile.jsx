@@ -19,7 +19,7 @@ export default function Profile() {
       .select('tn_roster(id, player_name, pos, tn_teams(name))').eq('user_id', session.user.id)
     setMine((s || []).map(x => x.tn_roster).filter(Boolean))
     const { data: m } = await supabase.from('tn_roster')
-      .select('id, player_name, pos, tn_teams(name)').eq('status', 'active')
+    .select('id, player_name, pos, tn_teams!inner(name, sport)').eq('status', 'active').eq('tn_teams.sport', 'football')
     setMarket(m || [])
     if (slot) {
       const { data: st } = await supabase.from('tn_stats').select('*').eq('roster_id', slot.id)
@@ -83,7 +83,7 @@ export default function Profile() {
       </div>
       {msg && <p className="err">{msg}</p>}
 
-      {slot && (<><h2 style={{ margin: '10px 0' }}>My statistics</h2><StatsGrid rows={rows} /></>)}
+      {slot && (<><h2 style={{ margin: '10px 0' }}>My statistics</h2><StatsGrid rows={rows} sport={slot?.tn_teams?.sport} /></>)}
 
       <h2 style={{ margin: '18px 0 10px' }}>Fantasy budget</h2>
       <div className="card stats">

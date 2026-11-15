@@ -17,7 +17,7 @@ export function AuthProvider({ children }) {
     const [p, t, s, a] = await Promise.all([
       supabase.from('profiles').select('*').eq('id', user.id).maybeSingle(),
       supabase.from('tn_teams').select('*').eq('captain_id', user.id).maybeSingle(),
-      supabase.from('tn_roster').select('*, tn_teams(name)').eq('user_id', user.id).maybeSingle(),
+      supabase.from('tn_roster').select('*, tn_teams(name, sport, format)').eq('user_id', user.id).eq('status', 'active').maybeSingle(),
       supabase.rpc('tn_is_admin'),
     ])
     setProfile(p.data); setTeam(t.data); setSlot(s.data); setIsAdmin(a.data === true)

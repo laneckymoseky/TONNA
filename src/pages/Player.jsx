@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
+import { SPORTS } from '../lib/sports'
 import Bg from '../components/Bg'
 import Avatar from '../components/Avatar'
 import StatsGrid from '../components/StatsGrid'
@@ -15,7 +16,7 @@ export default function Player() {
   const [err, setErr] = useState('')
 
   useEffect(() => {
-    supabase.from('tn_roster').select('*, tn_teams(id, name)').eq('id', id).maybeSingle().then(({ data }) => setP(data))
+    supabase.from('tn_roster').select('*, tn_teams(id, name, sport)').eq('id', id).maybeSingle().then(({ data }) => setP(data))
     supabase.from('tn_stats')
       .select('*, tn_challenges(match_date, home:tn_teams!from_team(name), away:tn_teams!to_team(name))')
       .eq('roster_id', id).then(({ data }) =>
@@ -31,6 +32,7 @@ export default function Player() {
   if (p === undefined) return <p className="wrap muted">Loading…</p>
   if (!p) return <p className="wrap muted">Player not found.</p>
 
+  const sp = SPORTS[p.tn_teams?.sport] || SPORTS.football
   const parts = p.player_name.split(' ')
   const first = parts.length > 1 ? parts[0] : p.pos
   const last = parts.length > 1 ? parts.slice(1).join(' ') : parts[0]
@@ -45,17 +47,19 @@ export default function Player() {
           <div className="last">{last}</div>
           <p className="muted" style={{ marginTop: 8 }}>
             <span className="tag">{p.pos}</span>{' '}
-            {p.tn_teams && <Link to={`/team/${p.tn_teams.id}`}>{p.tn_teams.name}</Link>}
+            {p.status === 'left' && <><span className="tag">Former player</span>{' '}</>}
+            {p.tn_teams && <Link to={`/team/${p.tn_teams.id}`}>{sp.icon} {p.tn_teams.name}</Link>}
           </p>
         </div>
       </div>
 
-      {p.user_id && p.user_id !== session.user.id && <button onClick={chat} style={{ marginBottom: 12 }}>CHAT WITH {first.toUpperCase()}</button>}
+      {p.status === 'active' && p.user_id && p.user_id !== session.user.id &&
+        <button onClick={chat} style={{ marginBottom: 12 }}>CHAT WITH {first.toUpperCase()}</button>}
       {!p.user_id && <p className="muted" style={{ marginBottom: 12 }}>Hasn't signed up yet, so chat isn't available.</p>}
       {err && <p className="err">{err}</p>}
 
       <h2 style={{ margin: '10px 0' }}>Statistics</h2>
-      <StatsGrid rows={rows} />
+      <StatsGrid rows={rows} sport={p.tn_teams?.sport} />
 
       <h2 style={{ margin: '18px 0 10px' }}>Match log</h2>
       {rows.length === 0 && <p className="muted">No stats recorded yet.</p>}
@@ -66,7 +70,9 @@ export default function Player() {
             <span className="muted">{r.tn_challenges?.match_date}</span>
           </div>
           <p className="muted">
-            {r.played ? `${r.goals} goals · ${r.assists} assists · ${r.saves} saves · ${r.yellow} yellow · ${r.red} red` : 'Did not play'}
+            {r.played
+              ? Object.entries(sp.stats).map(([k, l]) => `${r.data?.[k] || 0} ${l.toLowerCase()}`).join(' · ')
+              : 'Did not play'}
           </p>
         </div>
       ))}

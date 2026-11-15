@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
 import { MATCH_SELECT, dparts } from '../lib/prices'
+import { SPORTS, fmtLabel } from '../lib/sports'
 import Bg from '../components/Bg'
 
 export default function Challenge() {
@@ -18,14 +19,14 @@ export default function Challenge() {
   async function load() {
     const { data: t } = await supabase.from('tn_teams').select('*').eq('captain_id', session.user.id).maybeSingle()
     setMyTeam(t)
-    const { data: all } = await supabase.from('tn_teams').select('id, name').order('name')
-    setTeams((all || []).filter(x => x.id !== t?.id))
-    const { data: fl } = await supabase.from('tn_fields').select('*').order('name')
+    if (!t) return
+    const { data: all } = await supabase.from('tn_teams').select('id, name')
+      .eq('sport', t.sport).eq('format', t.format).neq('id', t.id).order('name')
+    setTeams(all || [])
+    const { data: fl } = await supabase.from('tn_fields').select('*').contains('sports', [t.sport]).order('name')
     setFields(fl || [])
-    if (t) {
-      const { data: inc } = await supabase.from('tn_challenges').select(MATCH_SELECT).eq('to_team', t.id).eq('status', 'pending')
-      setIncoming(inc || [])
-    }
+    const { data: inc } = await supabase.from('tn_challenges').select(MATCH_SELECT).eq('to_team', t.id).eq('status', 'pending')
+    setIncoming(inc || [])
   }
   useEffect(() => { load() }, [])
 
@@ -45,17 +46,19 @@ export default function Challenge() {
   }
 
   if (!myTeam) return <p className="wrap muted">Register your team first (My Team).</p>
+  const sp = SPORTS[myTeam.sport] || SPORTS.football
   return (
     <div className="wrap">
       <Bg name="challenge" />
-      <h1>Challenge a team</h1>
+      <h1>{sp.icon} Challenge a team</h1>
+      <p className="muted" style={{ marginBottom: 12 }}>{sp.name} · {fmtLabel(myTeam.sport, myTeam.format)} teams only</p>
       <form className="card" onSubmit={send}>
         <select value={f.to} onChange={set('to')} required>
           <option value="">Opponent</option>
           {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
         <select value={f.field} onChange={set('field')} required>
-          <option value="">Football field</option>
+          <option value="">Venue</option>
           {fields.map(x => <option key={x.id} value={x.id}>{x.name}</option>)}
         </select>
         <input type="date" value={f.date} onChange={set('date')} required />

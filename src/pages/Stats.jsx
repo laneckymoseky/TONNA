@@ -2,10 +2,8 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
 import { MATCH_SELECT } from '../lib/prices'
+import { SPORTS } from '../lib/sports'
 import Bg from '../components/Bg'
-
-const FIELDS = ['goals', 'assists', 'saves', 'yellow', 'red']
-const blank = { played: true, goals: 0, assists: 0, saves: 0, yellow: 0, red: 0 }
 
 export default function Stats() {
   const { session } = useAuth()
@@ -16,6 +14,10 @@ export default function Stats() {
   const [vals, setVals] = useState({})
   const [msg, setMsg] = useState('')
   const [err, setErr] = useState('')
+
+  const sp = SPORTS[team?.sport] || SPORTS.football
+  const keys = Object.keys(sp.stats)
+  const blank = { played: true, ...Object.fromEntries(keys.map(k => [k, 0])) }
 
   useEffect(() => {
     (async () => {
@@ -38,7 +40,8 @@ export default function Stats() {
     setMsg(''); setErr('')
     supabase.from('tn_stats').select('*').eq('challenge_id', mid).then(({ data }) => {
       const saved = Object.fromEntries((data || []).map(r => [r.roster_id, r]))
-      setVals(Object.fromEntries(players.map(p => [p.id, saved[p.id] ? { ...saved[p.id] } : { ...blank }])))
+      setVals(Object.fromEntries(players.map(p => [p.id,
+        saved[p.id] ? { ...blank, played: saved[p.id].played, ...saved[p.id].data } : { ...blank }])))
     })
   }, [mid, players])
 
@@ -48,8 +51,7 @@ export default function Stats() {
     setMsg(''); setErr('')
     const rows = players.map(p => {
       const v = vals[p.id] || blank
-      return { roster_id: p.id, played: !!v.played, goals: +v.goals || 0, assists: +v.assists || 0,
-               saves: +v.saves || 0, yellow: +v.yellow || 0, red: +v.red || 0 }
+      return { roster_id: p.id, played: !!v.played, stats: Object.fromEntries(keys.map(k => [k, +v[k] || 0])) }
     })
     const { error } = await supabase.rpc('tn_save_stats', { p_challenge: mid, p_rows: rows })
     error ? setErr(error.message) : setMsg('Stats saved ✓')
@@ -59,7 +61,7 @@ export default function Stats() {
   return (
     <div className="wrap">
       <Bg name="team" />
-      <h1>Match stats</h1>
+      <h1>{sp.icon} Match stats</h1>
       <select value={mid} onChange={e => setMid(e.target.value)}>
         <option value="">Choose a finished match</option>
         {matches.map(c => <option key={c.id} value={c.id}>{c.match_date} · {c.home?.name} vs {c.away?.name}</option>)}
@@ -76,8 +78,8 @@ export default function Stats() {
             </div>
             {v.played && (
               <div className="sgrid">
-                {FIELDS.map(k => (
-                  <label key={k}><small>{k}</small>
+                {keys.map(k => (
+                  <label key={k}><small>{sp.stats[k]}</small>
                     <input type="number" min="0" value={v[k]} onChange={e => setV(p.id, k, e.target.value)} />
                   </label>
                 ))}
