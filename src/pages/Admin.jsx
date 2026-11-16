@@ -23,13 +23,13 @@ function MatchRow({ c, onSaved }) {
   const [h, setH] = useState(c.home_score ?? '')
   const [a, setA] = useState(c.away_score ?? '')
   async function save() {
-    await supabase.from('tn_challenges').update({ home_score: +h, away_score: +a, status: 'played' }).eq('id', c.id)
-    onSaved()
+    await supabase.rpc('tn_admin_set_score', { p_challenge: c.id, p_home: +h, p_away: +a })
   }
   return (
     <div className="card">
       <b>{c.home?.name} vs {c.away?.name}</b>
       <p className="muted">{c.match_date} · {c.match_time?.slice(0, 5)} · {c.field?.name} · {c.status}</p>
+      {c.disputed && <p className="err">⚠ Score disputed. Enter the final score.</p>}
       <div className="row" style={{ justifyContent: 'flex-start', marginTop: 8 }}>
         <input className="score" type="number" min="0" value={h} onChange={e => setH(e.target.value)} />
         <span>-</span>
@@ -72,6 +72,7 @@ export default function Admin() {
   return (
     <div className="wrap">
       <h1>Admin</h1>
+      <Link to="/admin/tools" className="btn" style={{ marginBottom: 12 }}>REGISTRATION FIELDS, VENUES & AUDIT LOG</Link>
       <div className="row" style={{ gap: 12, marginBottom: 12 }}>
         <div className="card" style={{ flex: 1 }}><span className="muted">Players</span><h1>{count('player')}</h1></div>
         <div className="card" style={{ flex: 1 }}><span className="muted">Captains</span><h1>{count('captain')}</h1></div>

@@ -4,9 +4,11 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
 import { useSport } from '../context/SportContext'
 import { SPORTS, fmtLabel } from '../lib/sports'
+import { useBooked } from '../lib/useBooked'
 import Bg from '../components/Bg'
 import Pitch from '../components/Pitch'
 import DynamicFields from '../components/DynamicFields'
+
 
 export default function Captain() {
   const { session, refresh } = useAuth()
@@ -20,6 +22,7 @@ export default function Captain() {
   const [name, setName] = useState('')
   const [pos, setPos] = useState('')
   const [msg, setMsg] = useState('')
+  const { booked, next } = useBooked(team?.id)
 
   async function load() {
     const { data: t } = await supabase.from('tn_teams').select('*').eq('captain_id', session.user.id).maybeSingle()
@@ -129,11 +132,19 @@ export default function Captain() {
         </div>
       ))}
 
-      <div className="legend">
-        <span><i style={{ background: '#3ddc84' }} />Signed up</span>
-        <span><i style={{ background: '#f5b301' }} />Not signed up yet</span>
-      </div>
-      <Pitch slots={onPitch} onRemove={remove} sport={team.sport} />
+      {next ? (
+  <div className="card row">
+    <span><b>Next game:</b> {next.home?.name} vs {next.away?.name}<br />
+      <span className="muted">{next.match_date} · {next.match_time?.slice(0, 5)}</span></span>
+    <Link to={`/squad/${next.id}`} className="btn">PICK SQUAD</Link>
+  </div>
+) : <p className="muted">No upcoming game. Accepted challenges show up here.</p>}
+<div className="legend">
+  <span><i style={{ background: '#3ddc84' }} />Booked for next game</span>
+  <span><i style={{ background: '#f5b301' }} />Not booked</span>
+  <span>✓ signed up</span>
+</div>
+<Pitch slots={onPitch} onRemove={remove} sport={team.sport} booked={booked} />
     </div>
   )
 }

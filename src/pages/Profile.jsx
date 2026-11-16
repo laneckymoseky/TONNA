@@ -5,6 +5,9 @@ import { PRICES, BUDGET } from '../lib/prices'
 import Bg from '../components/Bg'
 import Avatar from '../components/Avatar'
 import StatsGrid from '../components/StatsGrid'
+import StatusBar from '../components/StatusBar'
+import Portfolio from '../components/Portfolio'
+import VisibilityPicker from '../components/VisibilityPicker'
 
 export default function Profile() {
   const { profile, session, team, slot, role, name, refresh } = useAuth()
@@ -82,6 +85,9 @@ export default function Profile() {
         </div>
       </div>
       {msg && <p className="err">{msg}</p>}
+      {slot && <StatusBar rosterId={slot.id} />}
+      <VisibilityPicker />
+      {slot && <Portfolio userId={session.user.id} />}
 
       {slot && (<><h2 style={{ margin: '10px 0' }}>My statistics</h2><StatsGrid rows={rows} sport={slot?.tn_teams?.sport} /></>)}
 

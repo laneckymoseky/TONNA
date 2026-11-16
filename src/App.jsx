@@ -20,6 +20,9 @@ import Player from './pages/Player'
 import Team from './pages/Team'
 import Stats from './pages/Stats'
 import Dashboard from './pages/Dashboard'
+import Scores from './pages/Scores'
+import Squad from './pages/Squad'
+import FreeAgents from './pages/FreeAgents'
 
 function Private({ children }) {
   const { session, loading } = useAuth()
@@ -46,10 +49,11 @@ function Nav() {
             <Link to={`/sport/${sport}`}>Dashboard</Link>
             <Link to="/profile">Profile</Link>
             <Link to="/rooms">Chat</Link>
+            <Link to="/agents">Free Agents</Link>
             {role === 'player' && slot
               ? <Link to={`/team/${slot.team_id}`}>My Team</Link>
               : <Link to="/captain">{role === 'captain' ? 'My Team' : 'Be a Captain'}</Link>}
-            {role === 'captain' && <><Link to="/challenge">Challenge</Link><Link to="/stats">Stats</Link></>}
+            {role === 'captain' && <><Link to="/challenge">Challenge</Link><Link to="/scores">Scores</Link><Link to="/stats">Stats</Link></>}
             {role === 'admin' && <Link to="/admin">Admin</Link>}
             <button className="ghost" onClick={logout}>Logout</button>
           </>
@@ -81,6 +85,9 @@ export default function App() {
         <Route path="/chat/:roomId" element={<Private><Chat /></Private>} />
         <Route path="/admin" element={<Private><Admin /></Private>} />
         <Route path="/admin/tools" element={<Private><AdminTools /></Private>} />
+        <Route path="/scores" element={<Private><Scores /></Private>} />
+        <Route path="/squad/:cid" element={<Private><Squad /></Private>} />
+        <Route path="/agents" element={<Private><FreeAgents /></Private>} />
       </Routes>
     </>
   )

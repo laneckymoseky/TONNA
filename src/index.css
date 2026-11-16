@@ -225,3 +225,8 @@ input[type=checkbox]{width:auto;margin:0 8px 0 0}
 .pitch.basketball{background:repeating-linear-gradient(90deg,#b8803f 0 46px,#c28a47 46px 92px);border-color:#fff}
 .pitch.rugby{background:repeating-linear-gradient(0deg,#2b7d3b 0 55px,#256f34 55px 110px)}
 .pitch.rugby::after{display:none}
+.chip .dot.booked{border-color:#3ddc84;box-shadow:0 0 0 3px rgba(61,220,132,.25)}
+.chip .dot.free{border-color:#f5b301}
+.tick{position:absolute;top:-4px;left:8px;width:20px;height:20px;border-radius:50%;background:#3ddc84;color:#000;font-size:12px;font-weight:900;display:grid;place-items:center;z-index:2}
+.status-bar{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;margin-bottom:12px}
+.status-bar i{width:12px;height:12px;border-radius:50%;flex:none}

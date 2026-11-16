@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
 import { SPORTS } from '../lib/sports'
+import AdminSeasons from '../components/AdminSeasons'
 
 export default function AdminTools() {
   const { role, loading } = useAuth()
@@ -50,7 +51,7 @@ export default function AdminTools() {
     <div className="wrap">
       <h1>Admin tools</h1>
       {err && <p className="err">{err}</p>}
-
+<AdminSeasons/>
       <h2 style={{ margin: '8px 0 10px' }}>Registration fields</h2>
       {ff.map(f => (
         <div className="card row" key={f.id} style={{ opacity: f.active ? 1 : .5 }}>

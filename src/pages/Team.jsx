@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { SPORTS, fmtLabel } from '../lib/sports'
+import { useBooked } from '../lib/useBooked'
 import Bg from '../components/Bg'
 import Pitch from '../components/Pitch'
 
@@ -9,6 +10,7 @@ export default function Team() {
   const { teamId } = useParams()
   const [team, setTeam] = useState(null)
   const [slots, setSlots] = useState([])
+  const { booked } = useBooked(teamId)
   useEffect(() => {
     supabase.from('tn_teams').select('name, sport, format, town, county').eq('id', teamId).maybeSingle().then(({ data }) => setTeam(data))
     supabase.from('tn_roster').select('*').eq('team_id', teamId).in('status', ['active', 'open'])
@@ -22,7 +24,12 @@ export default function Team() {
       <p className="muted" style={{ marginBottom: 12 }}>
         {sp.icon} {sp.name}{team && <> · {fmtLabel(team.sport, team.format)}</>} · tap a player to open their profile
       </p>
-      <Pitch slots={slots} sport={team?.sport} />
+      <div className="legend">
+        <span><i style={{ background: '#3ddc84' }} />Booked for next game</span>
+        <span><i style={{ background: '#f5b301' }} />Not booked</span>
+        <span>✓ signed up</span>
+      </div>
+      <Pitch slots={slots} sport={team?.sport} booked={booked} />
     </div>
   )
 }

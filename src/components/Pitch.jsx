@@ -1,12 +1,14 @@
 import { useNavigate } from 'react-router-dom'
 import { SPORTS } from '../lib/sports'
 
-function Chip({ s, onRemove }) {
+function Chip({ s, onRemove, booked }) {
   const nav = useNavigate()
   const ini = s.player_name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase()
   return (
     <div className="chip" onClick={() => nav(`/player/${s.id}`)}>
-      <div className={'dot ' + s.status} style={s.photo_url ? { backgroundImage: `url(${s.photo_url})` } : undefined}>
+      {s.status === 'active' && <span className="tick" title="Signed up">✓</span>}
+      <div className={'dot ' + (booked?.has(s.id) ? 'booked' : 'free')}
+        style={s.photo_url ? { backgroundImage: `url(${s.photo_url})` } : undefined}>
         {!s.photo_url && ini}
       </div>
       <small>{s.player_name}</small>
@@ -16,7 +18,7 @@ function Chip({ s, onRemove }) {
   )
 }
 
-export default function Pitch({ slots, onRemove, sport = 'football' }) {
+export default function Pitch({ slots, onRemove, sport = 'football', booked }) {
   const sp = SPORTS[sport] || SPORTS.football
   return (
     <div className={'pitch ' + sp.surface}>
@@ -25,7 +27,7 @@ export default function Pitch({ slots, onRemove, sport = 'football' }) {
         return (
           <div className="pl-row" key={row.join()}>
             {list.length === 0 && <span className="empty">NO {row.join(' / ')}</span>}
-            {list.map(s => <Chip key={s.id} s={s} onRemove={onRemove} />)}
+            {list.map(s => <Chip key={s.id} s={s} onRemove={onRemove} booked={booked} />)}
           </div>
         )
       })}
