@@ -29,6 +29,8 @@ import Cart from './pages/Cart'
 import Orders from './pages/Orders'
 import AdminShop from './pages/AdminShop'
 import { useCart } from './context/CartContext'
+import Snowflake from './components/Snowflake'
+
 
 function Private({ children }) {
   const { session, loading } = useAuth()
@@ -44,7 +46,7 @@ function Nav() {
   const logout = async () => { await supabase.auth.signOut(); nav('/') }
   return (
     <header className="nav">
-      <Link to="/" className="logo">LOCAL<span>FPL</span></Link>
+      <Link to="/" className="logo"><Snowflake size={24} />FLAKE<span>CITY</span></Link>
       <nav>
         <select className="sportsel" value={sport} onChange={e => { setSport(e.target.value); nav(`/sport/${e.target.value}`) }}>
           {Object.entries(SPORTS).map(([id, s]) => <option key={id} value={id}>{s.icon} {s.name}</option>)}

@@ -51,7 +51,7 @@ export default function Dashboard() {
 
   return (
     <div className="wrap">
-      <Bg name={id} />
+      <Bg name={id} plain />
       <div className="ph">
         <div className="first">{sp.icon} Dashboard</div>
         <div className="last">{sp.name}</div>
