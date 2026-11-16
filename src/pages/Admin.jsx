@@ -73,6 +73,7 @@ export default function Admin() {
     <div className="wrap">
       <h1>Admin</h1>
       <Link to="/admin/tools" className="btn" style={{ marginBottom: 12 }}>REGISTRATION FIELDS, VENUES & AUDIT LOG</Link>
+      <Link to="/admin/shop" className="btn" style={{ marginBottom: 12 }}>SHOP: ORDERS, PRODUCTS, PAYMENT</Link>
       <div className="row" style={{ gap: 12, marginBottom: 12 }}>
         <div className="card" style={{ flex: 1 }}><span className="muted">Players</span><h1>{count('player')}</h1></div>
         <div className="card" style={{ flex: 1 }}><span className="muted">Captains</span><h1>{count('captain')}</h1></div>

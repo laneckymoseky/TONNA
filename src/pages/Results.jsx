@@ -4,13 +4,14 @@ import { SPORTS } from '../lib/sports'
 import { MATCH_SELECT, dparts } from '../lib/prices'
 import Bg from '../components/Bg'
 import SportTabs from '../components/SportTabs'
+import Social from '../components/Social'
 
 export default function Results() {
   const [tab, setTab] = useState('all')
   const [list, setList] = useState([])
   useEffect(() => {
     supabase.from('tn_challenges').select(MATCH_SELECT).eq('status', 'played')
-      .order('match_date', { ascending: false }).then(({ data }) => setList(data || []))
+      .order('match_date', { ascending: false }).limit(60).then(({ data }) => setList(data || []))
   }, [])
   const ids = tab === 'all' ? Object.keys(SPORTS) : [tab]
   return (
@@ -27,14 +28,15 @@ export default function Results() {
             {items.map(c => {
               const [day, mon] = dparts(c.match_date)
               return (
-                <div key={c.id}>
-                  <div className="card match mag">
+                <div key={c.id} style={{ marginBottom: 14 }}>
+                  <div className="card match mag" style={{ marginBottom: 0 }}>
                     <div className="date"><b>{day}</b>{mon}</div>
                     <span className="t">{c.home?.name}</span>
                     <div className="sc"><span>{c.home_score}</span><span>{c.away_score}</span></div>
                     <span className="t r">{c.away?.name}</span>
                   </div>
                   <p className="match-meta">{c.field?.name}</p>
+                  <Social type="match" id={c.id} />
                 </div>
               )
             })}

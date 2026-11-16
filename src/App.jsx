@@ -23,6 +23,12 @@ import Dashboard from './pages/Dashboard'
 import Scores from './pages/Scores'
 import Squad from './pages/Squad'
 import FreeAgents from './pages/FreeAgents'
+import PostNews from './pages/PostNews'
+import Shop from './pages/Shop'
+import Cart from './pages/Cart'
+import Orders from './pages/Orders'
+import AdminShop from './pages/AdminShop'
+import { useCart } from './context/CartContext'
 
 function Private({ children }) {
   const { session, loading } = useAuth()
@@ -34,6 +40,7 @@ function Nav() {
   const { session, role, slot } = useAuth()
   const { sport, setSport } = useSport()
   const nav = useNavigate()
+  const { count } = useCart()
   const logout = async () => { await supabase.auth.signOut(); nav('/') }
   return (
     <header className="nav">
@@ -42,6 +49,7 @@ function Nav() {
         <select className="sportsel" value={sport} onChange={e => { setSport(e.target.value); nav(`/sport/${e.target.value}`) }}>
           {Object.entries(SPORTS).map(([id, s]) => <option key={id} value={id}>{s.icon} {s.name}</option>)}
         </select>
+        <Link to="/shop">Shop</Link>
         <Link to="/results">Results</Link>
         {session ? (
           <>
@@ -49,6 +57,7 @@ function Nav() {
             <Link to={`/sport/${sport}`}>Dashboard</Link>
             <Link to="/profile">Profile</Link>
             <Link to="/rooms">Chat</Link>
+            <Link to="/cart">Cart{count > 0 && <span className="badge">{count}</span>}</Link>
             <Link to="/agents">Free Agents</Link>
             {role === 'player' && slot
               ? <Link to={`/team/${slot.team_id}`}>My Team</Link>
@@ -69,6 +78,11 @@ export default function App() {
       <Nav />
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/cart" element={<Private><Cart /></Private>} />
+        <Route path="/shop/orders" element={<Private><Orders /></Private>} />
+        <Route path="/news/new" element={<Private><PostNews /></Private>} />
+        <Route path="/admin/shop" element={<Private><AdminShop /></Private>} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/results" element={<Results />} />
