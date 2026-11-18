@@ -1,12 +1,19 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { useAuth } from './AuthContext'
 
 const Ctx = createContext({ items: [], count: 0, total: 0, add() {}, setQty() {}, clear() {} })
 export const useCart = () => useContext(Ctx)
-const load = () => { try { return JSON.parse(localStorage.getItem('cart') || '[]') } catch { return [] } }
+const read = k => { try { return JSON.parse(localStorage.getItem(k) || '[]') } catch { return [] } }
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState(load)
-  useEffect(() => { try { localStorage.setItem('cart', JSON.stringify(items)) } catch {} }, [items])
+  const { session } = useAuth()
+  const key = 'cart:' + (session?.user?.id || 'guest')
+  const [items, setItems] = useState([])
+  const [loaded, setLoaded] = useState('')
+
+  useEffect(() => { setItems(read(key)); setLoaded(key) }, [key])
+  useEffect(() => { if (loaded === key) { try { localStorage.setItem(key, JSON.stringify(items)) } catch {} } }, [items, loaded, key])
+  useEffect(() => { try { localStorage.removeItem('cart') } catch {} }, [])
 
   const add = (p, size) => setItems(list => {
     const k = p.id + '|' + (size || '')

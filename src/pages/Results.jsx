@@ -5,15 +5,17 @@ import { MATCH_SELECT, dparts } from '../lib/prices'
 import Bg from '../components/Bg'
 import SportTabs from '../components/SportTabs'
 import Social from '../components/Social'
+import { useSport } from '../context/SportContext'
 
 export default function Results() {
   const [tab, setTab] = useState('all')
   const [list, setList] = useState([])
+  const { mySports } = useSport()
   useEffect(() => {
     supabase.from('tn_challenges').select(MATCH_SELECT).eq('status', 'played')
       .order('match_date', { ascending: false }).limit(60).then(({ data }) => setList(data || []))
   }, [])
-  const ids = tab === 'all' ? Object.keys(SPORTS) : [tab]
+  const ids = tab === 'all' ? mySports : [tab]
   return (
     <div className="wrap">
       <Bg name="results" />

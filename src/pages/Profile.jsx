@@ -8,6 +8,9 @@ import StatsGrid from '../components/StatsGrid'
 import StatusBar from '../components/StatusBar'
 import Portfolio from '../components/Portfolio'
 import VisibilityPicker from '../components/VisibilityPicker'
+import { useNavigate } from 'react-router-dom'
+import { uploadPublic } from '../lib/upload'
+import SportsPicker from '../components/SportsPicker'
 
 export default function Profile() {
   const { profile, session, team, slot, role, name, refresh } = useAuth()
@@ -16,6 +19,7 @@ export default function Profile() {
   const [rows, setRows] = useState([])
   const [tab, setTab] = useState('GK')
   const [msg, setMsg] = useState('')
+  const nav = useNavigate()
 
   async function load() {
     const { data: s } = await supabase.from('tn_squad')
@@ -40,20 +44,22 @@ export default function Profile() {
   const last = parts.slice(1).join(' ')
 
   async function upload(e) {
-    const file = e.target.files[0]
-    if (!file) return
-    if (!file.type.startsWith('image/')) return setMsg('Please choose an image')
-    if (file.size > 3 * 1024 * 1024) return setMsg('Photo must be under 3MB')
-    setMsg('Uploading…')
-    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase()
-    const path = `${session.user.id}/${Date.now()}.${ext}`
-    const { error } = await supabase.storage.from('avatars').upload(path, file, { contentType: file.type })
-    if (error) return setMsg(error.message)
-    const { data } = supabase.storage.from('avatars').getPublicUrl(path)
-    const { error: e2 } = await supabase.rpc('tn_set_photo', { p_url: data.publicUrl })
-    if (e2) return setMsg(e2.message)
+  const file = e.target.files[0]
+  if (!file) return
+  setMsg('Uploading…')
+  try {
+    const url = await uploadPublic('avatars', file, session.user.id, 900)
+    const { error } = await supabase.rpc('tn_set_photo', { p_url: url })
+    if (error) throw error
     setMsg(''); refresh()
-  }
+  } catch (x) { setMsg(x.message) }
+}
+async function leave() {
+  if (!confirm('Leave your team? You will become a free agent.')) return
+  const { error } = await supabase.rpc('tn_leave_team')
+  if (error) return setMsg(error.message)
+  await refresh(); nav('/agents')
+}
 
   async function buy(p) {
     const { error } = await supabase.from('tn_squad').insert({ user_id: session.user.id, roster_id: p.id })
@@ -87,6 +93,8 @@ export default function Profile() {
       {msg && <p className="err">{msg}</p>}
       {slot && <StatusBar rosterId={slot.id} />}
       <VisibilityPicker />
+      <SportsPicker />
+      {slot && <button className="ghost" style={{ marginBottom: 12 }} onClick={leave}>LEAVE TEAM</button>}
       {slot && <Portfolio userId={session.user.id} />}
 
       {slot && (<><h2 style={{ margin: '10px 0' }}>My statistics</h2><StatsGrid rows={rows} sport={slot?.tn_teams?.sport} /></>)}

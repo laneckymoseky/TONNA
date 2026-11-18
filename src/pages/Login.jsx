@@ -1,6 +1,7 @@
 ﻿import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import Bg from '../components/Bg'
 
 export default function Login() {
   const [id, setId] = useState('')
@@ -26,6 +27,7 @@ export default function Login() {
 
   return (
     <form className="narrow" onSubmit={submit}>
+      <Bg name="news" />
       <h1>Sign in</h1>
       <input placeholder="Email or username" value={id} onChange={e => setId(e.target.value)} required />
       <input type="password" placeholder="Password" value={pw} onChange={e => setPw(e.target.value)} required />

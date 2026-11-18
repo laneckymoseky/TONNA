@@ -11,7 +11,7 @@ import Portfolio from '../components/Portfolio'
 
 export default function Player() {
   const { id } = useParams()
-  const { session } = useAuth()
+  const { session, team } = useAuth()
   const nav = useNavigate()
   const [p, setP] = useState(undefined)
   const [rows, setRows] = useState([])
@@ -30,6 +30,13 @@ export default function Player() {
     const { data, error } = await supabase.rpc('tn_open_dm', { p_user: p.user_id })
     error ? setErr(error.message) : nav('/chat/' + data)
   }
+  async function offer() {
+  const message = window.prompt('Message to the player (optional)') ?? ''
+  setErr('')
+  const { error } = await supabase.rpc('tn_offer_transfer', { p_slot: p.id, p_pos: p.pos, p_message: message })
+  if (error) return setErr(error.message)
+  nav('/transfers')
+}
 
   if (p === undefined) return <p className="wrap muted">Loading…</p>
   if (!p) return <p className="wrap muted">This profile is private or doesn't exist.</p>
@@ -56,6 +63,7 @@ export default function Player() {
           <div className="last">{last}</div>
           <p className="muted" style={{ marginTop: 8 }}>
             <span className="tag">{p.pos}</span>{' '}
+            <span className="tag">Worth {Number(p.worth || 0).toFixed(1)}m</span>{' '}
             {p.status === 'left' && <><span className="tag">Former player</span>{' '}</>}
             {p.tn_teams && <Link to={`/team/${p.tn_teams.id}`}>{sp.icon} {p.tn_teams.name}</Link>}
           </p>
@@ -65,6 +73,8 @@ export default function Player() {
       {p.status === 'active' && <StatusBar rosterId={p.id} />}
       {p.status === 'active' && p.user_id && p.user_id !== session.user.id &&
         <button onClick={chat} style={{ marginBottom: 12 }}>CHAT WITH {first.toUpperCase()}</button>}
+        {team && p.status === 'active' && p.user_id && p.tn_teams?.id !== team.id && p.tn_teams?.sport === team.sport &&
+        <button className="ghost" style={{ margin: '0 0 12px 8px' }} onClick={offer}>MAKE TRANSFER OFFER</button>}
       {!p.user_id && <p className="muted" style={{ marginBottom: 12 }}>Hasn't signed up yet, so chat isn't available.</p>}
       {err && <p className="err">{err}</p>}
 

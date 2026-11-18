@@ -30,6 +30,9 @@ import Orders from './pages/Orders'
 import AdminShop from './pages/AdminShop'
 import { useCart } from './context/CartContext'
 import Snowflake from './components/Snowflake'
+import Bell from './components/Bell'
+import Notifications from './pages/Notifications'
+import Transfers from './pages/Transfers'
 
 
 function Private({ children }) {
@@ -40,7 +43,7 @@ function Private({ children }) {
 
 function Nav() {
   const { session, role, slot } = useAuth()
-  const { sport, setSport, brand } = useSport()
+  const { sport, setSport, brand, mySports } = useSport()
   const nav = useNavigate()
   const { count } = useCart()
   const logout = async () => { await supabase.auth.signOut(); nav('/') }
@@ -49,7 +52,7 @@ function Nav() {
       <Link to="/" className="logo"><Snowflake size={24} />LOCAL<span>{brand.short}</span></Link>
       <nav>
         <select className="sportsel" value={sport} onChange={e => { setSport(e.target.value); nav(`/sport/${e.target.value}`) }}>
-          {Object.entries(SPORTS).map(([id, s]) => <option key={id} value={id}>{s.icon} {s.name}</option>)}
+         {mySports.map(id => <option key={id} value={id}>{SPORTS[id].icon} {SPORTS[id].name}</option>)}
         </select>
         <Link to="/shop">Shop</Link>
         <Link to="/results">Results</Link>
@@ -60,7 +63,9 @@ function Nav() {
             <Link to="/profile">Profile</Link>
             <Link to="/rooms">Chat</Link>
             <Link to="/cart">Cart{count > 0 && <span className="badge">{count}</span>}</Link>
+            <Bell />
             <Link to="/agents">Free Agents</Link>
+            <Link to="/transfers">Transfers</Link>
             {role === 'player' && slot
               ? <Link to={`/team/${slot.team_id}`}>My Team</Link>
               : <Link to="/captain">{role === 'captain' ? 'My Team' : 'Be a Captain'}</Link>}
@@ -104,6 +109,8 @@ export default function App() {
         <Route path="/scores" element={<Private><Scores /></Private>} />
         <Route path="/squad/:cid" element={<Private><Squad /></Private>} />
         <Route path="/agents" element={<Private><FreeAgents /></Private>} />
+        <Route path="/notifications" element={<Private><Notifications /></Private>} />
+        <Route path="/transfers" element={<Private><Transfers /></Private>} />
       </Routes>
     </>
   )

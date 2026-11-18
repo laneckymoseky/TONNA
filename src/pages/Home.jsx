@@ -7,10 +7,13 @@ import { MATCH_SELECT, dparts } from '../lib/prices'
 import Bg from '../components/Bg'
 import SportTabs from '../components/SportTabs'
 import NewsCard from '../components/NewsCard'
+import LineUps from '../components/LineUps'
+import { useSport } from '../context/SportContext'
 
 export default function Home() {
   const { name, role, session } = useAuth()
   const [tab, setTab] = useState('all')
+  const { mySports } = useSport()
   const [list, setList] = useState([])
   const [posts, setPosts] = useState([])
   const [err, setErr] = useState('')
@@ -30,7 +33,7 @@ export default function Home() {
     error ? setErr(error.message) : loadPosts()
   }
   const canDelete = p => role === 'admin' || p.author_id === session?.user?.id
-  const ids = tab === 'all' ? Object.keys(SPORTS) : [tab]
+  const ids = tab === 'all' ? mySports : [tab]
   const general = posts.filter(p => !p.sport)
 
   return (
@@ -76,6 +79,7 @@ export default function Home() {
                     <span className="t r">{c.away?.name}</span>
                   </div>
                   <p className="match-meta">{c.match_time?.slice(0, 5)} · {c.field?.name}</p>
+                  <LineUps match={c} />
                 </div>
               )
             })}

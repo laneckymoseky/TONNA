@@ -1,23 +1,24 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useSport } from '../context/SportContext'
 import { SPORTS } from '../lib/sports'
 import { MATCH_SELECT, dparts } from '../lib/prices'
 import Bg from '../components/Bg'
 import Standings from '../components/Standings'
+import History from '../components/History'
 
 export default function Dashboard() {
   const { sport: id } = useParams()
   const sp = SPORTS[id]
-  const { setSport } = useSport()
+  const { sport: cur, setSport, mySports, ready } = useSport()
   const [matches, setMatches] = useState([])
   const [teams, setTeams] = useState(0)
   const [players, setPlayers] = useState(0)
   const [stats, setStats] = useState([])
 
   useEffect(() => {
-    if (!sp) return
+    if (!sp || (ready && !mySports.includes(id))) return
     setSport(id)
     supabase.from('tn_challenges').select(MATCH_SELECT).eq('sport', id).in('status', ['accepted', 'played'])
       .order('match_date').then(({ data }) => setMatches(data || []))
@@ -47,6 +48,7 @@ export default function Dashboard() {
   }, [stats, id])
 
   if (!sp) return <p className="wrap muted">Unknown sport.</p>
+  if (ready && !mySports.includes(id)) return <Navigate to={`/sport/${cur}`} replace />
   const recent = [...played].reverse().slice(0, 5)
 
   return (
@@ -89,6 +91,7 @@ export default function Dashboard() {
           </div>
         ))}
       </div>
+      <History sport={id} />
 
       <h2 style={{ margin: '18px 0 10px' }}>Recent results</h2>
       {recent.length === 0 && <p className="muted">No results yet.</p>}

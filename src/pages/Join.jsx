@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import Bg from '../components/Bg'
 
 export default function Join() {
   const [teams, setTeams] = useState([])
@@ -27,6 +28,7 @@ export default function Join() {
   )
   return (
     <form className="narrow" onSubmit={submit}>
+      <Bg name="news" />
       <h1>Join a team</h1>
       <select value={team} onChange={e => setTeam(e.target.value)} required>
         <option value="">Choose your team</option>

@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import { useSport } from '../context/SportContext'
 import { SPORTS } from '../lib/sports'
 import DynamicFields from '../components/DynamicFields'
+import Bg from '../components/Bg'
 
 export default function Signup() {
   const [f, setF] = useState({ name: '', username: '', email: '', pw: '', sport: 'football', county: '', town: '' })
@@ -49,6 +50,7 @@ export default function Signup() {
 
   return (
     <form className="narrow" onSubmit={submit}>
+      <Bg name="news" />
       <h1>Create account</h1>
       <input placeholder="Full name (exactly as your captain registered you)" value={f.name} onChange={set('name')} required />
       <input placeholder="Username" value={f.username} onChange={set('username')} required minLength={3} />

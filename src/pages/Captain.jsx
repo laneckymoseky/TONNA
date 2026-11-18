@@ -8,6 +8,7 @@ import { useBooked } from '../lib/useBooked'
 import Bg from '../components/Bg'
 import Pitch from '../components/Pitch'
 import DynamicFields from '../components/DynamicFields'
+import WorthPanel from '../components/WorthPanel'
 
 
 export default function Captain() {
@@ -145,6 +146,7 @@ export default function Captain() {
   <span>✓ signed up</span>
 </div>
 <Pitch slots={onPitch} onRemove={remove} sport={team.sport} booked={booked} />
+<WorthPanel slots={onPitch} onSaved={load} />
     </div>
   )
 }
