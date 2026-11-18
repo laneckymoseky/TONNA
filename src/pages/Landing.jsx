@@ -24,7 +24,7 @@ function useCountdown(target) {
 
 export default function Landing() {
   const { session } = useAuth()
-  const { sport } = useSport()
+  const { sport, brand } = useSport()
   const [next, setNext] = useState(null)
   const [last, setLast] = useState(null)
   const [values, setValues] = useState([])
@@ -55,8 +55,8 @@ export default function Landing() {
         }} />
         <div className="lp-flake"><Snowflake size={420} /></div>
         <div className="lp-inner">
-          <div className="lp-kicker">Neighbourhood tournaments</div>
-          <h1 className="lp-title">LOCAL<br /><span>FPL</span></h1>
+          <div className="lp-kicker">{brand.long}</div>
+          <h1 className="lp-title">LOCAL<br /><span>{brand.short}</span></h1>
           <p className="lp-sub">Register your team, challenge rivals, book a venue and build your fantasy squad.</p>
           {session
             ? <Link className="btn" to="/home">OPEN APP</Link>

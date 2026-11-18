@@ -40,13 +40,13 @@ function Private({ children }) {
 
 function Nav() {
   const { session, role, slot } = useAuth()
-  const { sport, setSport } = useSport()
+  const { sport, setSport, brand } = useSport()
   const nav = useNavigate()
   const { count } = useCart()
   const logout = async () => { await supabase.auth.signOut(); nav('/') }
   return (
     <header className="nav">
-      <Link to="/" className="logo"><Snowflake size={24} />FLAKE<span>CITY</span></Link>
+      <Link to="/" className="logo"><Snowflake size={24} />LOCAL<span>{brand.short}</span></Link>
       <nav>
         <select className="sportsel" value={sport} onChange={e => { setSport(e.target.value); nav(`/sport/${e.target.value}`) }}>
           {Object.entries(SPORTS).map(([id, s]) => <option key={id} value={id}>{s.icon} {s.name}</option>)}
