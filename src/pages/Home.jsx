@@ -9,6 +9,7 @@ import SportTabs from '../components/SportTabs'
 import NewsCard from '../components/NewsCard'
 import LineUps from '../components/LineUps'
 import { useSport } from '../context/SportContext'
+import TeamSearch from '../components/TeamSearch'
 
 export default function Home() {
   const { name, role, session } = useAuth()
@@ -50,6 +51,7 @@ export default function Home() {
           <Link to="/captain" style={{ color: 'var(--red)' }}>register your own</Link>.</div>
       )}
       {(role === 'admin' || role === 'captain') && <Link to="/news/new" className="btn" style={{ marginBottom: 10 }}>POST NEWS</Link>}
+      <TeamSearch />
       <SportTabs all value={tab} onChange={setTab} />
       {err && <p className="err">{err}</p>}
 

@@ -320,3 +320,19 @@ textarea:focus{outline:none;border-color:var(--red)}
   animation:ixfade .5s ease}
 @keyframes ixfade{from{opacity:0}to{opacity:1}}
 @media(max-width:700px){.ix-top{height:560px;top:-160px}}
+:root{--grey:#a8aebb;--glass:linear-gradient(135deg,rgba(24,28,40,.78),rgba(12,15,24,.68));--glass-line:rgba(255,255,255,.2)}
+.nav,.card,.ph,.narrow,.chatbox,.lp-card{background:var(--glass);border-color:var(--glass-line);
+  backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4)}
+.chatbox{background:rgba(14,16,22,.78)}
+.ice{background:linear-gradient(135deg,rgba(18,48,92,.72),rgba(8,20,44,.78))}
+.ix-top{filter:brightness(.62)}
+
+/* team search */
+.tsearch{position:relative;margin-bottom:12px}
+.tsearch input{margin:0}
+.tsearch-list{position:absolute;left:0;right:0;top:calc(100% + 6px);max-height:320px;overflow:auto;border-radius:14px;
+  border:1px solid rgba(255,255,255,.18);background:rgba(16,17,22,.96);backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);z-index:30;box-shadow:0 12px 30px rgba(0,0,0,.5)}
+.tsearch-list button{display:flex;justify-content:space-between;gap:10px;width:100%;text-align:left;background:transparent;
+  border-radius:0;letter-spacing:0;font-weight:500;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.tsearch-list button:hover{background:rgba(255,255,255,.08)}

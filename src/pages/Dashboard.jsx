@@ -25,7 +25,7 @@ export default function Dashboard() {
     supabase.from('tn_teams').select('id', { count: 'exact', head: true }).eq('sport', id).then(({ count }) => setTeams(count || 0))
     supabase.from('tn_roster').select('id, tn_teams!inner(sport)', { count: 'exact', head: true })
       .eq('status', 'active').eq('tn_teams.sport', id).then(({ count }) => setPlayers(count || 0))
-    supabase.from('tn_stats').select('roster_id, data, tn_roster(player_name, tn_teams(name)), tn_challenges!inner(sport)')
+    supabase.from('tn_stats').select('roster_id, data, tn_roster(player_name, user_id, tn_teams(name)), tn_challenges!inner(sport)')
       .eq('tn_challenges.sport', id).then(({ data }) => setStats(data || []))
   }, [id])
 
@@ -40,7 +40,8 @@ export default function Dashboard() {
       stats.forEach(r => {
         const v = r.data?.[k] || 0
         if (!v) return
-        const o = (tot[r.roster_id] ??= { name: r.tn_roster?.player_name, team: r.tn_roster?.tn_teams?.name, v: 0 })
+        const key = r.tn_roster?.user_id || r.roster_id
+        const o = (tot[key] ??= { name: r.tn_roster?.player_name, team: r.tn_roster?.tn_teams?.name, v: 0 })
         o.v += v
       })
       return { label, rows: Object.values(tot).sort((a, b) => b.v - a.v).slice(0, 5) }

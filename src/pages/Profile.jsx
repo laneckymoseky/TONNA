@@ -11,6 +11,7 @@ import VisibilityPicker from '../components/VisibilityPicker'
 import { useNavigate } from 'react-router-dom'
 import { uploadPublic } from '../lib/upload'
 import SportsPicker from '../components/SportsPicker'
+import PlayerStats from '../components/PlayerStats'
 
 export default function Profile() {
   const { profile, session, team, slot, role, name, refresh } = useAuth()
@@ -97,7 +98,7 @@ async function leave() {
       {slot && <button className="ghost" style={{ marginBottom: 12 }} onClick={leave}>LEAVE TEAM</button>}
       {slot && <Portfolio userId={session.user.id} />}
 
-      {slot && (<><h2 style={{ margin: '10px 0' }}>My statistics</h2><StatsGrid rows={rows} sport={slot?.tn_teams?.sport} /></>)}
+     <PlayerStats userId={session.user.id} slotId={slot?.id} sport={slot?.tn_teams?.sport || team?.sport || 'football'} />
 
       <h2 style={{ margin: '18px 0 10px' }}>Fantasy budget</h2>
       <div className="card stats">
