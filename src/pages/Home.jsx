@@ -10,6 +10,7 @@ import NewsCard from '../components/NewsCard'
 import LineUps from '../components/LineUps'
 import { useSport } from '../context/SportContext'
 import TeamSearch from '../components/TeamSearch'
+import GettingStarted from '../components/GettingStarted'
 
 export default function Home() {
   const { name, role, session } = useAuth()
@@ -44,12 +45,7 @@ export default function Home() {
         <div className="first">Welcome back</div>
         <div className="last">{name.split(' ')[0] || 'Player'}</div>
       </div>
-      {role === 'new' && (
-        <div className="card">You're not on a team yet.{' '}
-          <Link to="/join" style={{ color: 'var(--red)' }}>Join one</Link>,{' '}
-          <Link to="/agents" style={{ color: 'var(--red)' }}>get listed as a free agent</Link> or{' '}
-          <Link to="/captain" style={{ color: 'var(--red)' }}>register your own</Link>.</div>
-      )}
+      <GettingStarted />
       {(role === 'admin' || role === 'captain') && <Link to="/news/new" className="btn" style={{ marginBottom: 10 }}>POST NEWS</Link>}
       <TeamSearch />
       <SportTabs all value={tab} onChange={setTab} />

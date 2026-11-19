@@ -15,7 +15,7 @@ export default function Signup() {
   const [busy, setBusy] = useState(false)
   const nav = useNavigate()
   const { refresh } = useAuth()
-  const { setSport } = useSport()
+  const { setSport, reloadSports } = useSport()
   const set = k => e => setF({ ...f, [k]: e.target.value })
 
   useEffect(() => {
@@ -43,7 +43,8 @@ export default function Signup() {
     })
     setBusy(false)
     if (e3) return setErr(e3.message)
-    setSport(f.sport)
+      setSport(f.sport)
+    reloadSports()
     await refresh()
     nav('/join')
   }

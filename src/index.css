@@ -336,3 +336,29 @@ textarea:focus{outline:none;border-color:var(--red)}
 .tsearch-list button{display:flex;justify-content:space-between;gap:10px;width:100%;text-align:left;background:transparent;
   border-radius:0;letter-spacing:0;font-weight:500;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
 .tsearch-list button:hover{background:rgba(255,255,255,.08)}
+.tour-back{position:fixed;inset:0;z-index:100;background:rgba(4,6,12,.72);display:grid;place-items:center;padding:16px}
+.tour{width:min(94vw,440px);padding:24px 22px;border-radius:22px;text-align:center;
+  border:1px solid rgba(255,255,255,.22);background:linear-gradient(135deg,rgba(24,28,40,.94),rgba(12,15,24,.92));
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.tour .ti{font-size:46px}
+.tour h2{margin:8px 0}
+.tour p{color:#d5d9e3;line-height:1.4}
+.tour .dots{display:flex;gap:6px;justify-content:center;margin:16px 0}
+.tour .dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25)}
+.tour .dots i.on{background:var(--red)}
+.tour .tb{display:flex;gap:10px;justify-content:space-between}
+.tour .tb button{flex:1}
+.tour .skip{background:none;border:0;color:var(--grey);font-size:14px;margin-top:10px;letter-spacing:1px}
+.ptip{position:fixed;right:14px;bottom:78px;width:min(calc(100vw - 28px),370px);z-index:80;padding:16px 18px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.22);background:linear-gradient(135deg,rgba(24,28,40,.95),rgba(12,15,24,.93));
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 16px 44px rgba(0,0,0,.55);animation:ptin .25s ease}
+@keyframes ptin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ptip h3{font-size:18px;margin:0 0 6px;display:flex;gap:8px;align-items:center}
+.ptip p{color:#d5d9e3;line-height:1.35}
+.ptip ul{margin:8px 0 0;padding-left:18px;color:#d5d9e3;line-height:1.4}
+.ptip li{margin-bottom:3px}
+.ptip .pb{margin-top:12px}
+.ptip .pb button{width:100%;padding:9px 10px;font-size:14px}
+.ptip .off{background:none;border:0;color:var(--grey);font-size:13px;letter-spacing:.5px;margin-top:8px;padding:0;width:100%}
+.phelp{position:fixed;right:14px;bottom:20px;width:46px;height:46px;border-radius:50%;padding:0;font-size:22px;z-index:80;
+  box-shadow:0 8px 24px rgba(0,0,0,.5)}

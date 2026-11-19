@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import Bg from '../components/Bg'
+import { useSport } from '../context/SportContext'
 
 export default function Join() {
   const [teams, setTeams] = useState([])
@@ -10,8 +11,11 @@ export default function Join() {
   const [msg, setMsg] = useState('')
   const [done, setDone] = useState(false)
   const nav = useNavigate()
-  useEffect(() => { supabase.from('tn_teams').select('id, name').order('name').then(({ data }) => setTeams(data || [])) }, [])
-
+  const { mySports } = useSport()
+  useEffect(() => {
+    supabase.from('tn_teams').select('id, name').in('sport', mySports).order('name').then(({ data }) => setTeams(data || []))
+  }, [mySports.join()])
+  
   async function submit(e) {
     e.preventDefault(); setMsg('')
     const { error } = await supabase.rpc('tn_claim', { p_team: team, p_name: name })

@@ -22,8 +22,9 @@ export function SportProvider({ children }) {
 
   const ready = !loading && (!uid || mine.uid === uid)
   const own = [team?.sport, slot?.tn_teams?.sport].filter(s => SPORTS[s])
+
   let mySports = ALL
-  if (uid && role !== 'admin') {
+  if (uid && role !== 'admin' && ready) {
     mySports = [...new Set([...mine.list, ...own].filter(s => SPORTS[s]))]
     if (!mySports.length) mySports = ['football']
   }
@@ -36,6 +37,6 @@ export function SportProvider({ children }) {
   }, [sport])
 
   const setSport = s => { setPick(s); try { localStorage.setItem('sport', s) } catch {} }
-  const reloadSports = () => setTick(t => t + 1)
+  const reloadSports = () => { setMine(m => ({ ...m, uid: null })); setTick(t => t + 1) }
   return <Ctx.Provider value={{ sport, setSport, brand, mySports, ready, reloadSports }}>{children}</Ctx.Provider>
 }

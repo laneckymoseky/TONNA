@@ -35,6 +35,7 @@ import PostNews from './pages/PostNews'
 import AdminShop from './pages/AdminShop'
 import Notifications from './pages/Notifications'
 import Transfers from './pages/Transfers'
+import PageTips from './components/PageTips'
 
 function Private({ children }) {
   const { session, loading } = useAuth()
@@ -99,6 +100,7 @@ function Nav() {
                     </>
                   )}
                   {role === 'admin' && <Link to="/admin">Admin</Link>}
+                  <button className="ghost" onClick={() => { setOpen(false); window.dispatchEvent(new Event('resettips')) }}>Show page tips</button>
                   <button className="ghost" onClick={logout}>Logout</button>
                 </div>
               )}
@@ -120,6 +122,7 @@ export default function App() {
   return (
     <>
       <Nav />
+      <PageTips />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/league" element={<Landing />} />
