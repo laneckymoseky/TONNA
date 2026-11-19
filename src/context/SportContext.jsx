@@ -32,7 +32,7 @@ export function SportProvider({ children }) {
 
   useEffect(() => {
     document.documentElement.style.setProperty('--red', SPORTS[sport].color)
-    document.title = `Local${brand.short}`
+    document.title = 'Flake City'
   }, [sport])
 
   const setSport = s => { setPick(s); try { localStorage.setItem('sport', s) } catch {} }

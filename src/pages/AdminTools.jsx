@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { SPORTS } from '../lib/sports'
 import AdminSeasons from '../components/AdminSeasons'
 import AdminValues from '../components/AdminValues'
+import AdminAbout from '../components/AdminAbout'
 
 export default function AdminTools() {
   const { role, loading } = useAuth()
@@ -52,6 +53,7 @@ export default function AdminTools() {
     <div className="wrap">
       <h1>Admin tools</h1>
       {err && <p className="err">{err}</p>}
+<AdminAbout />    
 <AdminValues/>     
 <AdminSeasons/>
       <h2 style={{ margin: '8px 0 10px' }}>Registration fields</h2>

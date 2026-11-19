@@ -100,7 +100,7 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--gre
 .lp-bg{background-image:url('/images/hero.jpg')}
 @media(max-width:700px){
   .lp-bg{
-    background-image:url('/images/hero-mobile.jpg');
+    background-image:url('/images/hero.jpg');
     -webkit-mask-image:linear-gradient(to bottom,#000 0%,rgba(0,0,0,.6) 50%,transparent 95%);
     mask-image:linear-gradient(to bottom,#000 0%,rgba(0,0,0,.6) 50%,transparent 95%);
   }
@@ -251,7 +251,7 @@ textarea:focus{outline:none;border-color:var(--red)}
 
 /* per-sport hero (uses variables set by Landing.jsx) */
 .lp-bg{background-image:var(--hero, url('/images/hero.jpg'))}
-@media(max-width:700px){.lp-bg{background-image:var(--hero-m, url('/images/hero-mobile.jpg'))}}
+@media(max-width:700px){.lp-bg{background-image:var(--hero-m, url('/images/hero.jpg'))}}
 
 /* ball in the corner of every page */
 .pg-bg::before{content:"";position:absolute;right:-6vw;bottom:-6vw;width:min(46vw,520px);aspect-ratio:1;
@@ -268,3 +268,55 @@ textarea:focus{outline:none;border-color:var(--red)}
   box-shadow:0 8px 30px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.25)}
 .quote{margin:12px 0 0;padding:12px 16px;border-left:3px solid var(--red);font-style:italic}
 .quote footer{margin-top:6px;font-style:normal;color:var(--grey);font-size:14px}
+/* More menu */
+.more{position:relative}
+.more-menu{position:absolute;right:0;top:calc(100% + 12px);min-width:210px;padding:8px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.18);background:rgba(16,17,22,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  box-shadow:0 12px 36px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:2px;z-index:40}
+.nav .more-menu a{padding:10px 12px;border-radius:10px;color:#e6e8ee}
+.nav .more-menu a:hover{background:rgba(255,255,255,.08)}
+.more-menu button{margin-top:6px;width:100%}
+@media(max-width:640px){
+  .nav nav{overflow:visible;flex-wrap:wrap;white-space:normal}
+  .more-menu{position:fixed;left:12px;right:12px;top:auto;margin-top:12px}
+}
+
+/* index page: ice theme from the mockup */
+.pill{padding:8px 16px;border-radius:999px;border:1px solid var(--red);color:#fff;font-weight:700}
+.ix{max-width:760px;margin:0 auto;padding:16px 14px 60px}
+.ix-bg{position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 520px at 50% -8%,#10294a 0,#08101e 55%,#050912 100%)}
+.ice{position:relative;border-radius:22px;padding:18px 20px;margin-bottom:16px;
+  background:linear-gradient(135deg,rgba(60,140,220,.18),rgba(20,40,80,.30));
+  border:1px solid rgba(120,200,255,.45);
+  box-shadow:0 0 0 1px rgba(120,200,255,.12) inset,0 0 28px rgba(30,167,255,.28),0 10px 30px rgba(0,0,0,.45);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.ice::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(140px 70px at 8% 0,rgba(255,255,255,.18),transparent 70%),radial-gradient(140px 70px at 95% 100%,rgba(255,255,255,.14),transparent 70%)}
+.ix-head{display:flex;gap:16px;align-items:center}
+.ix-head h1{margin:0;font-size:clamp(24px,6vw,42px);line-height:1.05;letter-spacing:1px}
+.ix-tag{color:var(--red);font-weight:700;font-size:20px;margin-top:6px}
+.ix-hero{border-radius:20px;overflow:hidden;margin-bottom:16px;max-height:300px}
+.ix-hero img{width:100%;display:block;object-fit:cover;max-height:300px}
+.ix-next{text-align:center}
+.ix-kick{color:#9fb6d6;letter-spacing:2px;text-transform:uppercase;font-size:14px}
+.ix-next h2{font-size:clamp(24px,7vw,40px);margin:6px 0}
+.ix-vs{font-size:clamp(30px,9vw,56px);font-weight:900;color:#7fd0ff;text-shadow:0 0 18px rgba(30,167,255,.7);text-transform:uppercase;line-height:1.05}
+.ix-count{display:inline-flex;gap:10px;margin:14px 0;padding:10px 14px;border-radius:14px;border:1px solid rgba(120,200,255,.4);background:rgba(10,25,50,.5)}
+.ix-count div{text-align:center;min-width:44px}
+.ix-count b{display:block;font-size:30px;line-height:1}
+.ix-count small{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#9fb6d6}
+.ix-btns{display:flex;gap:12px;margin-bottom:16px}
+.ix-btns .btn{flex:1;text-align:center;margin:0}
+.ix .btn:not(.ghost){color:#04101f}
+.ix-h{margin:22px 0 12px}
+.ix-motto{text-align:center;font-size:20px;letter-spacing:2px;text-transform:uppercase}
+/* index: full-width page with a faded sport background behind the top */
+.ix{position:relative;max-width:none;margin:0;padding:0}
+.ix-in{position:relative;max-width:760px;margin:0 auto;padding:16px 14px 60px}
+.ix-top{position:absolute;left:0;right:0;top:-130px;height:720px;z-index:-1;pointer-events:none;
+  background-size:cover;background-position:center top;background-repeat:no-repeat;filter:brightness(.8);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 30%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 0%,#000 30%,transparent 100%);
+  animation:ixfade .5s ease}
+@keyframes ixfade{from{opacity:0}to{opacity:1}}
+@media(max-width:700px){.ix-top{height:560px;top:-160px}}

@@ -1,8 +1,13 @@
-import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import { useSport } from './context/SportContext'
+import { useCart } from './context/CartContext'
 import { SPORTS } from './lib/sports'
 import { supabase } from './lib/supabase'
+import Snowflake from './components/Snowflake'
+import Bell from './components/Bell'
+import Index from './pages/Index'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -23,17 +28,13 @@ import Dashboard from './pages/Dashboard'
 import Scores from './pages/Scores'
 import Squad from './pages/Squad'
 import FreeAgents from './pages/FreeAgents'
-import PostNews from './pages/PostNews'
 import Shop from './pages/Shop'
 import Cart from './pages/Cart'
 import Orders from './pages/Orders'
+import PostNews from './pages/PostNews'
 import AdminShop from './pages/AdminShop'
-import { useCart } from './context/CartContext'
-import Snowflake from './components/Snowflake'
-import Bell from './components/Bell'
 import Notifications from './pages/Notifications'
 import Transfers from './pages/Transfers'
-
 
 function Private({ children }) {
   const { session, loading } = useAuth()
@@ -43,37 +44,73 @@ function Private({ children }) {
 
 function Nav() {
   const { session, role, slot } = useAuth()
-  const { sport, setSport, brand, mySports } = useSport()
-  const nav = useNavigate()
+  const { sport, setSport, mySports } = useSport()
   const { count } = useCart()
+  const nav = useNavigate()
+  const loc = useLocation()
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => { setOpen(false) }, [loc.pathname])
+  useEffect(() => {
+    if (!open) return
+    const close = e => { if (!e.target.closest('.more')) setOpen(false) }
+    document.addEventListener('click', close)
+    return () => document.removeEventListener('click', close)
+  }, [open])
+
   const logout = async () => { await supabase.auth.signOut(); nav('/') }
+  const isPlayer = role === 'player' && slot
+  const teamLink = isPlayer ? `/team/${slot.team_id}` : '/captain'
+  const teamLabel = isPlayer || role === 'captain' ? 'My Team' : 'Be a Captain'
+
   return (
     <header className="nav">
-      <Link to="/" className="logo"><Snowflake size={24} />LOCAL<span>{brand.short}</span></Link>
+      <Link to="/" className="logo"><Snowflake size={24} />FLAKE<span>CITY</span></Link>
       <nav>
-        <select className="sportsel" value={sport} onChange={e => { setSport(e.target.value); nav(`/sport/${e.target.value}`) }}>
-         {mySports.map(id => <option key={id} value={id}>{SPORTS[id].icon} {SPORTS[id].name}</option>)}
+        <select className="sportsel" value={sport} onChange={e => {
+          setSport(e.target.value)
+          if (loc.pathname.startsWith('/sport/')) nav(`/sport/${e.target.value}`)
+          }}>
+          {mySports.map(id => <option key={id} value={id}>{SPORTS[id].icon} {SPORTS[id].name}</option>)}
         </select>
-        <Link to="/shop">Shop</Link>
-        <Link to="/results">Results</Link>
         {session ? (
           <>
             <Link to="/home">News</Link>
             <Link to={`/sport/${sport}`}>Dashboard</Link>
-            <Link to="/profile">Profile</Link>
+            <Link to={teamLink}>{teamLabel}</Link>
             <Link to="/rooms">Chat</Link>
-            <Link to="/cart">Cart{count > 0 && <span className="badge">{count}</span>}</Link>
             <Bell />
-            <Link to="/agents">Free Agents</Link>
-            <Link to="/transfers">Transfers</Link>
-            {role === 'player' && slot
-              ? <Link to={`/team/${slot.team_id}`}>My Team</Link>
-              : <Link to="/captain">{role === 'captain' ? 'My Team' : 'Be a Captain'}</Link>}
-            {role === 'captain' && <><Link to="/challenge">Challenge</Link><Link to="/scores">Scores</Link><Link to="/stats">Stats</Link></>}
-            {role === 'admin' && <Link to="/admin">Admin</Link>}
-            <button className="ghost" onClick={logout}>Logout</button>
+            <Link to="/cart">🛒{count > 0 && <span className="badge">{count}</span>}</Link>
+            <div className="more">
+              <button className="ghost" onClick={() => setOpen(o => !o)}>More ▾</button>
+              {open && (
+                <div className="more-menu">
+                  <Link to="/profile">Profile</Link>
+                  <Link to="/results">Results</Link>
+                  <Link to="/shop">Shop</Link>
+                  <Link to="/shop/orders">My orders</Link>
+                  <Link to="/agents">Free agents</Link>
+                  <Link to="/transfers">Transfers</Link>
+                  {role === 'captain' && (
+                    <>
+                      <Link to="/challenge">Challenge</Link>
+                      <Link to="/scores">Scores</Link>
+                      <Link to="/stats">Match stats</Link>
+                    </>
+                  )}
+                  {role === 'admin' && <Link to="/admin">Admin</Link>}
+                  <button className="ghost" onClick={logout}>Logout</button>
+                </div>
+              )}
+            </div>
           </>
-        ) : <Link to="/login">Login</Link>}
+        ) : (
+          <>
+            <Link to="/shop">Shop</Link>
+            <Link to="/results">Results</Link>
+            <Link to="/login">Login</Link>
+          </>
+        )}
       </nav>
     </header>
   )
@@ -84,15 +121,12 @@ export default function App() {
     <>
       <Nav />
       <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/cart" element={<Private><Cart /></Private>} />
-        <Route path="/shop/orders" element={<Private><Orders /></Private>} />
-        <Route path="/news/new" element={<Private><PostNews /></Private>} />
-        <Route path="/admin/shop" element={<Private><AdminShop /></Private>} />
+        <Route path="/" element={<Index />} />
+        <Route path="/league" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/results" element={<Results />} />
+        <Route path="/shop" element={<Shop />} />
         <Route path="/join" element={<Private><Join /></Private>} />
         <Route path="/home" element={<Private><Home /></Private>} />
         <Route path="/sport/:sport" element={<Private><Dashboard /></Private>} />
@@ -101,16 +135,20 @@ export default function App() {
         <Route path="/team/:teamId" element={<Private><Team /></Private>} />
         <Route path="/player/:id" element={<Private><Player /></Private>} />
         <Route path="/challenge" element={<Private><Challenge /></Private>} />
+        <Route path="/scores" element={<Private><Scores /></Private>} />
+        <Route path="/squad/:cid" element={<Private><Squad /></Private>} />
         <Route path="/stats" element={<Private><Stats /></Private>} />
+        <Route path="/agents" element={<Private><FreeAgents /></Private>} />
+        <Route path="/transfers" element={<Private><Transfers /></Private>} />
+        <Route path="/notifications" element={<Private><Notifications /></Private>} />
+        <Route path="/cart" element={<Private><Cart /></Private>} />
+        <Route path="/shop/orders" element={<Private><Orders /></Private>} />
+        <Route path="/news/new" element={<Private><PostNews /></Private>} />
         <Route path="/rooms" element={<Private><Rooms /></Private>} />
         <Route path="/chat/:roomId" element={<Private><Chat /></Private>} />
         <Route path="/admin" element={<Private><Admin /></Private>} />
         <Route path="/admin/tools" element={<Private><AdminTools /></Private>} />
-        <Route path="/scores" element={<Private><Scores /></Private>} />
-        <Route path="/squad/:cid" element={<Private><Squad /></Private>} />
-        <Route path="/agents" element={<Private><FreeAgents /></Private>} />
-        <Route path="/notifications" element={<Private><Notifications /></Private>} />
-        <Route path="/transfers" element={<Private><Transfers /></Private>} />
+        <Route path="/admin/shop" element={<Private><AdminShop /></Private>} />
       </Routes>
     </>
   )
