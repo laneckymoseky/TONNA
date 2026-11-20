@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import Bg from '../components/Bg'
+import PushToggle from '../components/PushToggle'
 
 export default function Notifications() {
   const nav = useNavigate()
@@ -22,6 +23,7 @@ export default function Notifications() {
     <div className="wrap">
       <Bg name="news" />
       <div className="row"><h1>Notifications</h1><button className="ghost" onClick={readAll}>MARK ALL READ</button></div>
+      <PushToggle />
       {list.length === 0 && <p className="muted">Nothing yet.</p>}
       {list.map(n => (
         <div key={n.id} className="card mag" style={{ cursor: 'pointer', borderColor: n.read ? undefined : 'var(--red)' }} onClick={() => open(n)}>

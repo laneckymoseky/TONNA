@@ -5,6 +5,7 @@ import { SPORTS } from '../lib/sports'
 import AdminSeasons from '../components/AdminSeasons'
 import AdminValues from '../components/AdminValues'
 import AdminAbout from '../components/AdminAbout'
+import AdminLineup from '../components/AdminLineup'
 
 export default function AdminTools() {
   const { role, loading } = useAuth()
@@ -53,6 +54,7 @@ export default function AdminTools() {
     <div className="wrap">
       <h1>Admin tools</h1>
       {err && <p className="err">{err}</p>}
+<AdminLineup />
 <AdminAbout />    
 <AdminValues/>     
 <AdminSeasons/>

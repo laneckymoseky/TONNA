@@ -9,6 +9,7 @@ import Bg from '../components/Bg'
 import Pitch from '../components/Pitch'
 import DynamicFields from '../components/DynamicFields'
 import WorthPanel from '../components/WorthPanel'
+import LineupWarning from '../components/LineupWarning'
 
 
 export default function Captain() {
@@ -111,6 +112,7 @@ export default function Captain() {
         {home && <> · Home: {home}</>}
       </p>
       {msg && <p className="err">{msg}</p>}
+      <LineupWarning teamId={team.id} />
 
       {slots.length < max && (
         <form className="card row" onSubmit={addPlayer} style={{ flexWrap: 'wrap' }}>

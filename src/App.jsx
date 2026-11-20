@@ -37,6 +37,7 @@ import Notifications from './pages/Notifications'
 import Transfers from './pages/Transfers'
 import PageTips from './components/PageTips'
 import Splash from './components/Splash'
+import { forgetPush } from './lib/push'
 
 function Private({ children }) {
   const { session, loading } = useAuth()
@@ -60,7 +61,7 @@ function Nav() {
     return () => document.removeEventListener('click', close)
   }, [open])
 
-  const logout = async () => { await supabase.auth.signOut(); nav('/') }
+  const logout = async () => { await forgetPush(); await supabase.auth.signOut(); nav('/') }
   const isPlayer = role === 'player' && slot
   const teamLink = isPlayer ? `/team/${slot.team_id}` : '/captain'
   const teamLabel = isPlayer || role === 'captain' ? 'My Team' : 'Be a Captain'

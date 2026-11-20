@@ -11,6 +11,7 @@ import LineUps from '../components/LineUps'
 import { useSport } from '../context/SportContext'
 import TeamSearch from '../components/TeamSearch'
 import GettingStarted from '../components/GettingStarted'
+import PushToggle from '../components/PushToggle'
 
 export default function Home() {
   const { name, role, session } = useAuth()
@@ -45,6 +46,7 @@ export default function Home() {
         <div className="first">Welcome back</div>
         <div className="last">{name.split(' ')[0] || 'Player'}</div>
       </div>
+      <PushToggle prompt />
       <GettingStarted />
       {(role === 'admin' || role === 'captain') && <Link to="/news/new" className="btn" style={{ marginBottom: 10 }}>POST NEWS</Link>}
       <TeamSearch />
