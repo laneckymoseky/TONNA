@@ -36,6 +36,7 @@ import AdminShop from './pages/AdminShop'
 import Notifications from './pages/Notifications'
 import Transfers from './pages/Transfers'
 import PageTips from './components/PageTips'
+import Splash from './components/Splash'
 
 function Private({ children }) {
   const { session, loading } = useAuth()
@@ -120,7 +121,8 @@ function Nav() {
 
 export default function App() {
   return (
-    <>
+    <> 
+      <Splash />
       <Nav />
       <PageTips />
       <Routes>

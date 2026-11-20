@@ -362,3 +362,25 @@ textarea:focus{outline:none;border-color:var(--red)}
 .ptip .off{background:none;border:0;color:var(--grey);font-size:13px;letter-spacing:.5px;margin-top:8px;padding:0;width:100%}
 .phelp{position:fixed;right:14px;bottom:20px;width:46px;height:46px;border-radius:50%;padding:0;font-size:22px;z-index:80;
   box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  .splash{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(900px 520px at 50% 35%,#10294a 0,#08101e 55%,#050912 100%);color:#fff;text-align:center;
+  transition:opacity .45s ease;overflow:hidden}
+.splash.out{opacity:0;pointer-events:none}
+.splash .snow{position:absolute;top:-10px;border-radius:50%;background:#cfeaff;animation:splashfall linear infinite}
+.splash .sflake{animation:splashspin 5s ease-out both,splashglow 1.6s ease-in-out infinite alternate}
+.splash .sflake path{stroke-dasharray:1;stroke-dashoffset:1;animation:splashdraw 1s ease forwards}
+.splash .stitle{margin:18px 0 6px;letter-spacing:8px;font-size:clamp(28px,8vw,46px);opacity:0;animation:splashup .8s ease 1.8s forwards}
+.splash .stag{color:#7fd0ff;letter-spacing:1px;opacity:0;animation:splashup .8s ease 2.6s forwards}
+.splash .sbar{position:absolute;left:12%;right:12%;bottom:12%;height:4px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden}
+.splash .sbar i{display:block;height:100%;background:#1ea7ff;animation:splashbar linear forwards}
+@keyframes splashfall{to{transform:translate(30px,110vh)}}
+@keyframes splashdraw{to{stroke-dashoffset:0}}
+@keyframes splashspin{from{transform:rotate(-40deg) scale(.7)}to{transform:rotate(60deg) scale(1)}}
+@keyframes splashglow{from{filter:drop-shadow(0 0 6px rgba(30,167,255,.5))}to{filter:drop-shadow(0 0 22px rgba(30,167,255,.95))}}
+@keyframes splashup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes splashbar{from{width:0}to{width:100%}}
+@media(prefers-reduced-motion:reduce){
+  .splash .snow{display:none}
+  .splash .sflake,.splash .sflake path{animation:none;stroke-dashoffset:0}
+  .splash .stitle,.splash .stag{animation:none;opacity:1}
+}
