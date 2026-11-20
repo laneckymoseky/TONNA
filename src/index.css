@@ -384,3 +384,7 @@ textarea:focus{outline:none;border-color:var(--red)}
   .splash .sflake,.splash .sflake path{animation:none;stroke-dashoffset:0}
   .splash .stitle,.splash .stag{animation:none;opacity:1}
 }
+:root{--red:#1ea7ff;--danger:#ff5d6c}
+.err{color:var(--danger)}
+.card:hover{border-color:rgba(30,167,255,.55)}
+.tag{background:rgba(30,167,255,.18)}

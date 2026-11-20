@@ -29,10 +29,7 @@ export default function Index() {
   const [next, setNext] = useState(null)
   const sp = SPORTS[sport]
 
-  useEffect(() => {
-    document.documentElement.style.setProperty('--red', ICE)
-    return () => document.documentElement.style.setProperty('--red', SPORTS[sport].color)
-  }, [sport])
+ 
 
   useEffect(() => {
     supabase.from('tn_settings').select('value').eq('key', 'about').maybeSingle().then(({ data }) => {

@@ -39,7 +39,7 @@ export default function LineupWarning({ teamId }) {
   )
   const late = now >= deadline
   return (
-    <div className="card row" style={{ borderColor: late ? 'var(--red)' : '#f5b301' }}>
+    <div className="card row" style={{ borderColor: late ? 'var(--danger)' : '#f5b301' }}>
       <span>
         {late ? '⏰ ' : '⚠️ '}<b>{late ? 'Line-up deadline passed' : `Pick your line-up by ${hhmm}`}</b> · {vs}<br />
         <span className="muted" style={{ fontSize: 14 }}>

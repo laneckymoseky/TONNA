@@ -7,10 +7,18 @@ const toBytes = s => {
   return Uint8Array.from([...raw].map(c => c.charCodeAt(0)))
 }
 
-export const pushSupported = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window && !!KEY
+export function pushIssue() {
+  if (!KEY) return 'key'
+  if (!window.isSecureContext) return 'https'
+  if (!('serviceWorker' in navigator)) return 'worker'
+  if (!('PushManager' in window) || !('Notification' in window)) return 'push'
+  return ''
+}
+export const pushSupported = () => pushIssue() === ''
 
 export async function pushState() {
-  if (!pushSupported()) return 'unsupported'
+  const issue = pushIssue()
+  if (issue) return 'unsupported:' + issue
   if (Notification.permission === 'denied') return 'denied'
   const reg = await navigator.serviceWorker.getRegistration()
   const sub = await reg?.pushManager.getSubscription()
@@ -35,7 +43,6 @@ export async function disablePush() {
   if (sub) { await supabase.rpc('tn_remove_push', { p_endpoint: sub.endpoint }); await sub.unsubscribe() }
 }
 
-// on logout: stop this device receiving the previous user's alerts
 export async function forgetPush() {
   try {
     const reg = await navigator.serviceWorker.getRegistration()

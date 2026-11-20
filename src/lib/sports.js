@@ -1,6 +1,6 @@
-export const SPORTS = {
+const ALL_SPORTS = {
   football: {
-    name: 'Football', icon: '⚽', color: '#e11d2e', surface: 'football',
+    name: 'Football', icon: '⚽', color: '#1ea7ff', surface: 'football',
     brand: { short: 'FPL', long: 'Fantasy Premier League' },
     positions: { GK: 'Goalkeeper', DEF: 'Defender', MID: 'Midfielder', FWD: 'Forward' },
     rows: [['FWD'], ['MID'], ['DEF'], ['GK']],
@@ -12,7 +12,7 @@ export const SPORTS = {
     quote: "Some people think football is a matter of life and death. I assure you, it's much more serious than that.", by: 'Bill Shankly',},
   },
   basketball: {
-    name: 'Basketball', icon: '🏀', color: '#ff7a18', surface: 'basketball',
+    name: 'Basketball', icon: '🏀', color: '#0889dfe5', surface: 'basketball',
     brand: { short: 'FBA', long: 'Fantasy Basketball Association' },
     positions: { PG: 'Point guard', SG: 'Shooting guard', SF: 'Small forward', PF: 'Power forward', C: 'Center' },
     rows: [['C'], ['PF', 'SF'], ['SG', 'PG']],
@@ -24,7 +24,7 @@ export const SPORTS = {
     quote: "I can accept failure, everyone fails at something. But I can't accept not trying.", by: 'Michael Jordan',},
   },
   rugby: {
-    name: 'Rugby', icon: '🏉', color: '#3b82f6', surface: 'rugby',
+    name: 'Rugby', icon: '🏉', color: '#3b82f6',enabled: false, surface: 'rugby',
     brand: { short: 'FRA', long: 'Fantasy Rugby Association' },
     positions: { FR: 'Front row', LK: 'Lock', BR: 'Back row', HB: 'Half-back', CT: 'Centre', B3: 'Back three' },
     rows: [['B3'], ['CT'], ['HB'], ['BR'], ['LK'], ['FR']],
@@ -36,4 +36,6 @@ export const SPORTS = {
       quote: 'with a fine disregard for the rules of football as played in his time', by: 'Plaque at Rugby School',},
   },
 }
+export const SPORTS = Object.fromEntries(Object.entries(ALL_SPORTS).filter(([, s]) => s.enabled !== false))
+
 export const fmtLabel = (sport, size) => SPORTS[sport]?.formats[size]?.[0] || `${size}-a-side`
