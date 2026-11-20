@@ -388,3 +388,17 @@ textarea:focus{outline:none;border-color:var(--red)}
 .err{color:var(--danger)}
 .card:hover{border-color:rgba(30,167,255,.55)}
 .tag{background:rgba(30,167,255,.18)}
+/* falling snow */
+.snowfall{pointer-events:none;overflow:hidden}
+.snowfall.fixed{position:fixed;inset:0;z-index:-1}
+.snowfall.area{position:absolute;inset:0;z-index:0}
+.snowfall.over{position:fixed;inset:0;z-index:5}
+.sf{position:absolute;top:-24px;animation:sfall linear infinite;will-change:transform}
+.sf.dot{border-radius:50%;background:radial-gradient(circle,#fff 0,rgba(207,234,255,.85) 40%,transparent 72%)}
+.sf svg{display:block}
+@keyframes sfall{
+  0%{transform:translate3d(0,0,0) rotate(0deg)}
+  100%{transform:translate3d(var(--d,30px),110vh,0) rotate(360deg)}
+}
+@media(max-width:700px){.sf.sm-hide{display:none}}
+@media(prefers-reduced-motion:reduce){.snowfall{display:none}}

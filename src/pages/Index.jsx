@@ -6,6 +6,7 @@ import { useSport } from '../context/SportContext'
 import { SPORTS } from '../lib/sports'
 import { MATCH_SELECT } from '../lib/prices'
 import Snowflake from '../components/Snowflake'
+import Snowfall from '../components/Snowfall'
 
 const ICE = '#1ea7ff'
 const DEFAULTS = {
@@ -58,10 +59,12 @@ export default function Index() {
   const enter = session ? '/home' : '/league'
 
   return (
+    
     <div className="ix">
       <div className="ix-bg" />
       <div key={sport} className="ix-top"
         style={{ backgroundImage: `url(/images/index-hero-${sport}.jpg), url(/images/index-hero.jpg)` }} />
+        <Snowfall />
 
       <div className="ix-in">
         <header className="ice ix-head">

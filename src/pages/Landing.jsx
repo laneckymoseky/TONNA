@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import { useSport } from '../context/SportContext'
 import { MATCH_SELECT } from '../lib/prices'
 import Snowflake from '../components/Snowflake'
+import Snowfall from '../components/Snowfall'
 
 const steps = [
   ['1', 'Captain registers the team', 'Add players with their exact names and positions.', '/images/captain.jpg'],
@@ -54,6 +55,7 @@ export default function Landing() {
           '--hero-m': `url(/images/hero-${sport}.jpg), url(/images/hero.jpg)`,
         }} />
         <div className="lp-flake"><Snowflake size={420} /></div>
+        <Snowfall mode="area" />
         <div className="lp-inner">
           <div className="lp-kicker">{brand.long}</div>
           <h1 className="lp-title">FLAKE<br /><span>CITY</span></h1>
